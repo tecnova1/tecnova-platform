@@ -35,7 +35,7 @@ export default function ObservatorioPage() {
         <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-2">
           <span className="text-xs text-slate-400">Fricción Frecuente</span>
           <p className="text-sm font-light text-slate-100 truncate">Plataforma Caída / Espera</p>
-          <span class="text-[10px] text-slate-500 block">Cuello de botella principal</span>
+          <span className="text-[10px] text-slate-500 block">Cuello de botella principal</span>
         </div>
         <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-2">
           <span className="text-xs text-slate-400">Sectores Analizados</span>
