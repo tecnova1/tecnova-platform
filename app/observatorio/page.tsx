@@ -16,36 +16,36 @@ export default function ObservatorioPage() {
         </div>
         <div className="bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg text-[11px] text-emerald-400 font-mono flex items-center space-x-2">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>Módulo Vivo</span>
+          <span>Recolección Abierta</span>
         </div>
       </div>
 
-      {/* TARJETAS DE DATOS DEMOSTRATIVOS */}
+      {/* TARJETAS DE DATOS EN CERO */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-2">
           <span className="text-xs text-slate-400">Historias Recopiladas</span>
-          <p className="text-2xl font-light text-slate-100 font-mono">1,248</p>
-          <span className="text-[10px] text-slate-500 block">Experiencias registradas</span>
+          <p className="text-2xl font-light text-slate-100 font-mono">0</p>
+          <span className="text-[10px] text-slate-500 block">Esperando primeras respuestas</span>
         </div>
         <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-2">
           <span className="text-xs text-slate-400">Tiempo Promedio Perdido</span>
-          <p className="text-2xl font-light text-emerald-400 font-mono">42 min</p>
-          <span className="text-[10px] text-slate-500 block">Por interacción</span>
+          <p className="text-2xl font-light text-emerald-400 font-mono">-- min</p>
+          <span className="text-[10px] text-slate-500 block">En cálculo inicial</span>
         </div>
         <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-2">
           <span className="text-xs text-slate-400">Fricción Frecuente</span>
-          <p className="text-sm font-light text-slate-100 truncate">Plataforma Caída / Espera</p>
-          <span className="text-[10px] text-slate-500 block">Cuello de botella principal</span>
+          <p className="text-sm font-light text-slate-100 truncate">Por determinar</p>
+          <span className="text-[10px] text-slate-500 block">En análisis de datos</span>
         </div>
         <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-2">
           <span className="text-xs text-slate-400">Sectores Analizados</span>
-          <p className="text-2xl font-light text-slate-100 font-mono">6</p>
-          <span className="text-[10px] text-slate-500 block">Públicos y Privados</span>
+          <p className="text-2xl font-light text-slate-100 font-mono">0</p>
+          <span className="text-[10px] text-slate-500 block">Estudio recién iniciado</span>
         </div>
       </div>
 
       <p className="text-xs text-slate-500 italic text-center">
-        * Datos demostrativos. Próximamente este observatorio mostrará resultados reales obtenidos a partir de la investigación en tiempo real.
+        * Los indicadores se irán consolidando a medida que avance la recolección de experiencias en tiempo real.
       </p>
 
       <div className="pt-6 text-center">
