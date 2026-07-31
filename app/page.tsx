@@ -1,47 +1,79 @@
-import Link from 'next/link';
-import { ModalInvestigacion } from '@/components/ui/ModalInvestigacion';
+import React from 'react';
 
 export default function Home() {
   return (
-    <div className="space-y-20 pb-20">
+    <main className="min-h-screen bg-[#0d0d0d] text-gray-100 flex flex-col justify-between p-6 sm:p-12 font-sans">
+      
       {/* HERO SECTION */}
-      <section className="px-6 pt-24 pb-16 text-center max-w-4xl mx-auto space-y-8">
-        <span className="text-[11px] uppercase tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full inline-block">
-          Sede Digital & Centro de Investigación
+      <section className="max-w-4xl mx-auto text-center pt-12 pb-8 space-y-6">
+        <span className="text-xs font-mono uppercase tracking-widest text-emerald-400 bg-emerald-950/50 px-3 py-1 rounded-full border border-emerald-800">
+          Centro de Investigación & Intelligence
         </span>
         
-        <h1 className="text-3xl md:text-5xl font-light text-slate-100 leading-relaxed tracking-tight">
-          Restaurando la <span className="font-normal border-b-2 border-emerald-500 pb-1">dignidad del tiempo humano</span>.
+        <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-tight">
+          Comprender la Fricción. <br />
+          <span className="text-emerald-400">Restaurar el Tiempo.</span>
         </h1>
         
-        <p className="text-slate-400 text-sm md:text-base leading-relaxed max-w-2xl mx-auto font-light">
-          La tecnología debe acompañar al Ser. Nunca entorpecerlo.<br className="hidden md:inline"/>
-          Comprendemos cómo las personas viven la gestión cotidiana para descubrir dónde aparece la fricción y cómo devolver tiempo, claridad y confianza.
+        <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto font-light">
+          Una investigación permanente sobre cómo viven las personas la gestión cotidiana.
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-          <ModalInvestigacion />
-          <Link
-            href="/nosotros"
-            className="w-full sm:w-auto bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 text-xs font-medium px-8 py-4 rounded-full transition"
+        <p className="text-sm sm:text-base text-gray-400 italic">
+          TECNOVA escucha historias para comprender la Fricción Organizacional.
+        </p>
+
+        <div className="pt-4">
+          <a
+            href="#experiencia"
+            className="inline-block bg-emerald-500 hover:bg-emerald-400 text-black font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-emerald-500/20 transition-all duration-200"
           >
-            Conocer TECNOVA
-          </Link>
+            Compartir mi experiencia
+          </a>
         </div>
       </section>
 
-      {/* FILOSOFÍA Y MANIFIESTO */}
-      <section className="px-6 py-16 bg-slate-900/40 border-y border-slate-800/80">
-        <div className="max-w-3xl mx-auto text-center space-y-4">
-          <p className="text-slate-500 text-xs tracking-widest uppercase">El Tiempo Humano</p>
-          <p className="text-slate-200 text-base md:text-lg font-light leading-relaxed italic">
-            "La existencia humana ocupa apenas un instante dentro del universo. La muerte podrá perdonar un momento de nuestra existencia, pero el tiempo jamás nos devolverá aquello que la fricción nos arrebató."
-          </p>
-          <p className="text-slate-400 text-xs md:text-sm font-light pt-2 leading-relaxed">
-            Cada fila innecesaria. Cada sitio web que no carga. Cada trámite incomprensible. Cada espera sin explicación... representa tiempo de vida perdido.
+      {/* SECCIÓN: ¿POR QUÉ EXISTE TECNOVA? */}
+      <section className="max-w-3xl mx-auto my-12 p-8 border border-gray-800/80 bg-gray-900/40 rounded-2xl text-center space-y-4">
+        <h2 className="text-2xl font-bold text-white">¿Por qué existe TECNOVA?</h2>
+        <blockquote className="text-lg sm:text-xl italic text-gray-300">
+          "Todo comenzó con una pregunta: <br />
+          <span className="text-emerald-400 font-semibold not-italic">
+            ¿Cuánto tiempo pierde una persona producto de la fricción de un sistema?
+          </span>
+          <br />
+          Desde entonces seguimos buscando la respuesta."
+        </blockquote>
+      </section>
+
+      {/* PRINCIPIOS METODOLÓGICOS */}
+      <section className="max-w-4xl mx-auto my-8 text-center space-y-6">
+        <div>
+          <h2 className="text-2xl font-bold text-white">Nuestros principios</h2>
+          <p className="text-sm text-gray-400">
+            No como valores corporativos. Como principios metodológicos.
           </p>
         </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
+          {['Curiosidad', 'Honestidad', 'Incomodidad', 'Franqueza'].map((principio) => (
+            <div key={principio} className="p-4 bg-gray-900/60 border border-gray-800 rounded-xl text-center">
+              <span className="font-semibold text-emerald-400">{principio}</span>
+            </div>
+          ))}
+        </div>
       </section>
-    </div>
+
+      {/* FOOTER CONSTITUCIONAL */}
+      <footer className="max-w-4xl mx-auto w-full pt-12 pb-6 border-t border-gray-800/60 text-center space-y-2">
+        <p className="text-base font-semibold text-gray-200">
+          Comprender antes de transformar.
+        </p>
+        <p className="text-xs text-gray-500">
+          Centro de Investigación | Plataforma de Inteligencia Organizacional | Laboratorio de Innovación
+        </p>
+      </footer>
+
+    </main>
   );
 }
