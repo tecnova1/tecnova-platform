@@ -1,4 +1,5 @@
 import React from 'react';
+import { ModalInvestigacion } from '@/components/ui/ModalInvestigacion';
 
 export default function Home() {
   return (
@@ -23,13 +24,9 @@ export default function Home() {
           TECNOVA escucha historias para comprender la Fricción Organizacional.
         </p>
 
-        <div className="pt-4">
-          <a
-            href="#experiencia"
-            className="inline-block bg-emerald-500 hover:bg-emerald-400 text-black font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-emerald-500/20 transition-all duration-200"
-          >
-            Compartir mi experiencia
-          </a>
+        {/* COMPONENTE MODAL INTERNO */}
+        <div className="pt-4 flex justify-center">
+          <ModalInvestigacion />
         </div>
       </section>
 
