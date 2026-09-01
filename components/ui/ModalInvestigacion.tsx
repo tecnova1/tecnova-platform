@@ -36,7 +36,7 @@ export const ModalInvestigacion = () => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.2 }}
-              className="bg-[#0b1329] border border-slate-800 rounded-xl sm:rounded-2xl w-full max-w-2xl md:max-w-3xl max-h-[90vh] md:max-h-[88vh] flex flex-col shadow-2xl overflow-hidden relative my-auto"
+              className="bg-[#0b1329] border border-slate-800 rounded-xl sm:rounded-2xl w-full h-[90vh] md:h-auto max-w-4xl p-2 sm:p-6 flex flex-col shadow-2xl overflow-hidden relative my-auto"
             >
               {/* Header */}
               <div className="bg-[#070c18] border-b border-slate-800/80 px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center shrink-0 gap-3">
@@ -93,7 +93,7 @@ export const ModalInvestigacion = () => {
                   <div className="pt-3 sm:pt-4 border-t border-slate-800/80 flex justify-end">
                     <button
                       onClick={() => setStep(2)}
-                      className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-medium text-xs sm:text-sm px-6 sm:px-8 py-3 sm:py-3.5 rounded-full transition shadow-lg shadow-emerald-950/30"
+                      className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-medium text-xs sm:text-sm px-6 sm:px-8 py-3 sm:py-3.5 rounded-full transition shadow-lg shadow-emerald-800/20"
                     >
                       Comprendo y deseo participar
                     </button>
@@ -106,7 +106,7 @@ export const ModalInvestigacion = () => {
                 <div className="flex-grow w-full bg-[#0b1329] relative overflow-hidden">
                   <iframe
                     src={TALLY_URL_OPTIMIZED}
-                    className="w-full h-full border-0"
+                    className="w-full h-full min-h-[500px] border-0 rounded-lg"
                     title="Investigación de Fricción Organizacional — TECNOVA SpA"
                     style={{ colorScheme: 'dark' }}
                   />
