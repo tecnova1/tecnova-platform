@@ -13,12 +13,12 @@ export const SocialMenu = () => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative w-full sm:w-auto">
       <button
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-label="Abrir redes sociales de TECNOVA"
-        className="text-xs border border-slate-800 bg-slate-900/80 hover:border-emerald-500/50 text-slate-300 px-4 py-2 rounded-full transition-all duration-300 flex items-center space-x-2"
+        className="text-xs border border-slate-800 bg-slate-900/80 hover:border-emerald-500/50 text-slate-300 px-3 sm:px-4 py-2 rounded-full transition-all duration-300 flex items-center space-x-2 w-full sm:w-auto justify-center sm:justify-start"
       >
         <span>Síguenos</span>
         <span className="text-[10px] text-slate-500">▼</span>
@@ -31,7 +31,7 @@ export const SocialMenu = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.15 }}
-            className="absolute right-0 mt-2 w-52 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl p-2 z-50 text-xs"
+            className="absolute left-0 sm:right-0 sm:left-auto mt-2 w-full sm:w-52 bg-slate-900 border border-slate-800 rounded-lg sm:rounded-xl shadow-2xl p-2 z-50 text-xs"
           >
             <button
               onClick={() => handleSelect(siteConfig.links.linkedin)}
