@@ -39,7 +39,7 @@ function requireToken_(e) {
 function ensureHeader_(sheet) {
   if (sheet.getLastRow() > 0) return;
   sheet.appendRow([
-    'received_at','source','event','system','case_id','role','age_range',
+    'received_at','source','event','system','case_id','role',
     'place_or_organization','story','friction_1_5','main_difficulties','moment',
     'proposed_change','territory_lat','territory_lng','resolved','quality',
     'attention','trust','crew_technical_compliance','diagnostic','conformity',
@@ -57,7 +57,6 @@ function flattenRow_(p) {
     p.system || 'TECNOVA',
     p.case_id || '',
     p.role || '',
-    p.age_range || '',
     p.place_or_organization || '',
     p.story || '',
     p.friction_1_5 ?? '',
