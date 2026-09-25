@@ -17,7 +17,11 @@ export async function POST(request: Request) {
       ...payload,
     };
 
-    const response = await fetch(destination, {
+    const url = new URL(destination);
+    const token = process.env.GOOGLE_APPS_SCRIPT_TOKEN;
+    if (token) url.searchParams.set('token', token);
+
+    const response = await fetch(url.toString(), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(record),
