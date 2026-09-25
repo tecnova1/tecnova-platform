@@ -92,7 +92,9 @@ export const EncuestaInvestigacion = ({ onClose }: { onClose: () => void }) => {
 
     const payload = {
       survey: 'IFC',
-      survey_version: '1.0-native',
+      survey_version: '1.1-native',
+      research_type: 'Experiencia Organizacional',
+      origin: 'IFC_NATIVO',
       consent: true,
       anonymous: true,
       role,
