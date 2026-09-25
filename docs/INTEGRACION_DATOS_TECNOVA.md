@@ -50,3 +50,12 @@ El tiempo promedio permanece null mientras la investigación no recoja una medic
 Los dos proyectos deben usar el mismo valor de GOOGLE_APPS_SCRIPT_URL.
 
 No se deben guardar credenciales de Google, tokens ni secretos en el repositorio.
+## Puesta en marcha sin costo
+
+1. Crear una Google Sheet central de investigación en Drive.
+2. Abrir Extensiones → Apps Script desde esa planilla.
+3. Copiar `docs/google-apps-script/TECNOVA_DATA.gs` al proyecto Apps Script.
+4. Opcional: definir la propiedad `TECNOVA_TOKEN` en Project Settings → Script Properties.
+5. Desplegar como Web App con acceso para quien deba enviar/consultar datos.
+6. Configurar en TECNOVA y Nexo las variables `GOOGLE_APPS_SCRIPT_URL` y, si se usa, `GOOGLE_APPS_SCRIPT_TOKEN` con los mismos valores.
+7. Probar primero con datos de prueba; luego habilitar la recolección pública.
