@@ -14,6 +14,7 @@ export const Header = () => {
     { label: 'Nosotros', href: '/nosotros' },
     { label: 'Investigación', href: '/investigacion' },
     { label: 'Observatorio', href: '/observatorio' },
+    { label: 'Nexo Cívico', href: '/nexo' },
     { label: 'Publicaciones', href: '/publicaciones' },
     { label: 'Contacto', href: '/contacto' },
   ];
