@@ -14,6 +14,8 @@ export async function GET() {
   try {
     const url = new URL(destination);
     url.searchParams.set('action', 'metrics');
+    const token = process.env.GOOGLE_APPS_SCRIPT_TOKEN;
+    if (token) url.searchParams.set('token', token);
     const response = await fetch(url.toString(), { cache: 'no-store' });
     if (!response.ok) return NextResponse.json(EMPTY_METRICS);
     const data = await response.json();
