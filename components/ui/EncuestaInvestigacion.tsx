@@ -3,19 +3,48 @@
 import { useState } from 'react';
 
 type Role = 'usuario' | 'trabajador';
+type Step = 'welcome' | 'privacy' | 'role' | 'user' | 'worker' | 'sent';
 
-const AGE_RANGES = ['18–24', '25–34', '35–44', '45–54', '55–64', '65 o más'];
+const USER_DIFFICULTIES = [
+  'Información poco clara',
+  'Tiempo de espera',
+  'Comunicación',
+  'Plataforma o sistema',
+  'Procedimientos',
+  'Derivaciones',
+  'Otro',
+];
 
-const USER_DIFFICULTIES = ['Información poco clara', 'Tiempo de espera', 'Comunicación', 'Plataforma o sistema', 'Procedimientos', 'Derivaciones', 'Otro'];
-const WORKER_DIFFICULTIES = ['Falta de tiempo', 'Falta de personal', 'Recursos limitados', 'Sistemas tecnológicos', 'Normativa', 'Comunicación', 'Otro'];
-const USER_MOMENTS = ['Antes de iniciar', 'Durante el proceso', 'Esperando respuesta', 'Al finalizar', 'Nunca sentí incertidumbre'];
-const WORKER_MOMENTS = ['Antes de iniciar', 'Durante la ejecución', 'Esperando otra unidad', 'Al finalizar', 'Fue permanente durante todo el proceso'];
+const WORKER_DIFFICULTIES = [
+  'Falta de tiempo',
+  'Falta de personal',
+  'Recursos limitados',
+  'Sistemas tecnológicos',
+  'Normativa',
+  'Comunicación',
+  'Otro',
+];
+
+const USER_MOMENTS = [
+  'Antes de iniciar',
+  'Durante el proceso',
+  'Esperando respuesta',
+  'Al finalizar',
+  'Nunca sentí incertidumbre',
+];
+
+const WORKER_MOMENTS = [
+  'Antes de iniciar',
+  'Durante la ejecución',
+  'Esperando otra unidad',
+  'Al finalizar',
+  'Fue permanente durante todo el proceso',
+];
 
 export const EncuestaInvestigacion = ({ onClose }: { onClose: () => void }) => {
+  const [step, setStep] = useState<Step>('welcome');
   const [consent, setConsent] = useState(false);
-  const [ageRange, setAgeRange] = useState('');
   const [role, setRole] = useState<Role | ''>('');
-  const [step, setStep] = useState<'consent' | 'age' | 'story' | 'context' | 'sent'>('consent');
   const [placeOrOrganization, setPlaceOrOrganization] = useState('');
   const [story, setStory] = useState('');
   const [friction, setFriction] = useState('');
@@ -29,32 +58,63 @@ export const EncuestaInvestigacion = ({ onClose }: { onClose: () => void }) => {
   const momentOptions = isWorker ? WORKER_MOMENTS : USER_MOMENTS;
 
   const toggleDifficulty = (item: string) => {
-    setDifficulties((current) => current.includes(item) ? current.filter((value) => value !== item) : [...current, item]);
+    setDifficulties((current) =>
+      current.includes(item)
+        ? current.filter((value) => value !== item)
+        : [...current, item],
+    );
+  };
+
+  const chooseRole = (nextRole: Role) => {
+    setRole(nextRole);
+    setPlaceOrOrganization('');
+    setStory('');
+    setFriction('');
+    setDifficulties([]);
+    setMoment('');
+    setChange('');
+    setStep(nextRole === 'usuario' ? 'user' : 'worker');
   };
 
   const submit = async () => {
-    if (!role || !ageRange || !story.trim() || !friction || !moment || difficulties.length === 0) return;
+    if (
+      !role ||
+      !consent ||
+      !story.trim() ||
+      !friction ||
+      !moment ||
+      difficulties.length === 0
+    ) {
+      return;
+    }
+
     setStatus('sending');
 
     const payload = {
       survey: 'IFC',
-      survey_version: '1.0-native-conversational',
-      submitted_at_client: new Date().toISOString(),
+      survey_version: '1.0-native',
       consent: true,
       anonymous: true,
-      age_range: ageRange,
       role,
-      place_or_organization: placeOrOrganization,
-      story,
+      place_or_organization: placeOrOrganization.trim(),
+      story: story.trim(),
       friction_1_5: Number(friction),
       main_difficulties: difficulties,
       greatest_uncertainty_or_difficulty_moment: moment,
-      proposed_change: change,
+      proposed_change: change.trim(),
     };
 
     try {
-      const response = await fetch('/api/investigacion', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-      if (!response.ok) throw new Error('No fue posible registrar la historia.');
+      const response = await fetch('/api/investigacion', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error('No fue posible registrar la historia.');
+      }
+
       setStep('sent');
     } catch {
       setStatus('error');
@@ -63,113 +123,312 @@ export const EncuestaInvestigacion = ({ onClose }: { onClose: () => void }) => {
     }
   };
 
+  const renderScale = () => (
+    <div>
+      <label className="mb-2 block text-sm font-semibold">
+        {isWorker
+          ? 'En una escala de 1 a 5, ¿cuánta fricción o sobrecarga te generó este proceso de trabajo? *'
+          : 'En una escala de 1 a 5, ¿cuánta fricción o dificultad sentiste durante este trámite? *'}
+      </label>
+      <div className="flex gap-2">
+        {[1, 2, 3, 4, 5].map((value) => (
+          <button
+            key={value}
+            type="button"
+            onClick={() => setFriction(String(value))}
+            className={`h-11 w-11 rounded-lg border text-sm ${
+              friction === String(value)
+                ? 'border-emerald-600 bg-emerald-50 text-emerald-800'
+                : 'border-slate-200 hover:border-slate-400'
+            }`}
+          >
+            {value}
+          </button>
+        ))}
+      </div>
+      <div className="mt-1 flex justify-between text-xs text-slate-500">
+        <span>Sin fricción (Fluido)</span>
+        <span>{isWorker ? 'Parálisis / Frustración extrema' : 'Bloqueo / Desgaste extremo'}</span>
+      </div>
+    </div>
+  );
+
   return (
     <div className="flex h-full min-h-[500px] flex-col bg-white text-slate-800">
       {step !== 'sent' && (
         <div className="border-b border-slate-200 px-6 py-4">
-          <p className="text-xs font-semibold uppercase tracking-widest text-emerald-700">TECNOVA · Investigación</p>
-          <h3 className="mt-1 text-xl font-semibold">Queremos escuchar tu historia</h3>
+          <p className="text-xs font-semibold uppercase tracking-widest text-emerald-700">
+            TECNOVA · Investigación
+          </p>
+          <h3 className="mt-1 text-xl font-semibold">Encuesta de Experiencia Organizacional</h3>
         </div>
       )}
 
-      {step === 'consent' && (
+      {step === 'welcome' && (
         <div className="flex-1 space-y-6 overflow-y-auto p-6 sm:p-8">
           <div className="space-y-4 text-sm leading-relaxed">
+            <h4 className="text-lg font-semibold">¿Cómo viviste esta experiencia? *</h4>
             <p>En TECNOVA creemos que toda gestión deja una experiencia.</p>
-            <p>Queremos comprender cómo viven las personas los procesos y cómo la fricción afecta su tiempo, su comprensión y su experiencia.</p>
-            <p>No buscamos evaluar personas ni instituciones. Buscamos comprender experiencias.</p>
-            <p>Tu participación es voluntaria y puedes abandonar el proceso antes de enviarlo.</p>
-            <p><strong>Las respuestas son anónimas.</strong> No solicitamos nombre, RUT, correo electrónico ni otros datos destinados a identificarte directamente.</p>
-            <p>La información será utilizada exclusivamente con fines de investigación sobre fricción organizacional y mejora de la gestión.</p>
+            <p>
+              Queremos comprender cómo viven las personas los procesos organizacionales para
+              identificar dónde aparece la fricción y cómo ésta afecta el tiempo, la comprensión y
+              la experiencia tanto de quienes utilizan un servicio como de quienes trabajan para
+              hacerlo posible.
+            </p>
+            <p>No buscamos evaluar personas ni instituciones.</p>
+            <p>Buscamos comprender experiencias.</p>
+            <p>Tu participación es completamente voluntaria.</p>
+            <p>Las respuestas son anónimas.</p>
+            <p>No recopilamos datos personales.</p>
+            <p>
+              La información será utilizada exclusivamente con fines de investigación para
+              comprender la gestión desde la experiencia humana.
+            </p>
           </div>
+          <button
+            type="button"
+            onClick={() => setStep('privacy')}
+            className="w-full rounded-full bg-slate-900 px-6 py-3 text-sm font-medium text-white"
+          >
+            Continuar
+          </button>
+        </div>
+      )}
+
+      {step === 'privacy' && (
+        <div className="flex-1 space-y-6 overflow-y-auto p-6 sm:p-8">
+          <div className="space-y-4 text-sm leading-relaxed">
+            <h4 className="text-lg font-semibold">¿Cómo protegemos tu información?</h4>
+            <p className="font-semibold">Protección de tu información</p>
+            <p>En TECNOVA creemos que la confianza comienza por el respeto a las personas.</p>
+            <div className="space-y-2">
+              <p>Por ello:</p>
+              <p>• No solicitamos nombre, RUT, correo electrónico ni ningún dato que permita identificarte directamente.</p>
+              <p>• Tu participación es completamente voluntaria.</p>
+              <p>• Puedes abandonar el formulario en cualquier momento antes de enviarlo.</p>
+              <p>• Las respuestas serán analizadas únicamente de forma agregada y estadística.</p>
+              <p>• La información será utilizada exclusivamente para investigación sobre fricción organizacional y mejora de la gestión.</p>
+              <p>• Nunca se publicarán respuestas individuales.</p>
+            </div>
+            <div className="space-y-2">
+              <p className="font-semibold">Fundamento normativo (Chile)</p>
+              <p>
+                El tratamiento de la información se inspira en los principios establecidos en la
+                Ley N.º 19.628 sobre Protección de la Vida Privada y la Ley N.º 20.285 sobre
+                Acceso a la Información Pública, junto con principios internacionales de
+                investigación ética: participación voluntaria, confidencialidad, minimización de
+                datos y finalidad específica.
+              </p>
+            </div>
+            <p>
+              Al responder este formulario autorizas el uso de información anónima únicamente para
+              fines de investigación y análisis organizacional. TECNOVA no investiga personas.
+              Investiga experiencias.
+            </p>
+          </div>
+
           <label className="flex gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm leading-relaxed">
-            <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="mt-1 h-4 w-4 shrink-0" />
-            <span>He leído y acepto participar voluntariamente en esta investigación. Comprendo que mis respuestas serán tratadas de forma anónima y utilizadas únicamente con fines de investigación.</span>
+            <input
+              type="checkbox"
+              checked={consent}
+              onChange={(event) => setConsent(event.target.checked)}
+              className="mt-1 h-4 w-4 shrink-0"
+            />
+            <span>
+              He leído y acepto participar voluntariamente en esta investigación. Comprendo que
+              mis respuestas serán tratadas de forma anónima y utilizadas únicamente con fines de
+              investigación y mejora de la gestión.
+            </span>
           </label>
-          <button disabled={!consent} onClick={() => setStep('age')} className="w-full rounded-full bg-slate-900 px-6 py-3 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-40">
+
+          <button
+            type="button"
+            disabled={!consent}
+            onClick={() => setStep('role')}
+            className="w-full rounded-full bg-slate-900 px-6 py-3 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-40"
+          >
             Acepto y continuar
           </button>
         </div>
       )}
 
-      {step === 'age' && (
+      {step === 'role' && (
         <div className="flex-1 space-y-6 overflow-y-auto p-6 sm:p-8">
           <div>
-            <h4 className="text-lg font-semibold">Antes de comenzar</h4>
-            <p className="mt-2 text-sm leading-relaxed text-slate-600">Sólo necesitamos un rango de edad para analizar las experiencias de forma agregada. No solicitamos tu edad exacta.</p>
+            <h4 className="text-lg font-semibold">Hoy respondes como: *</h4>
+            <p className="mt-2 text-sm leading-relaxed text-slate-600">
+              Esta elección nos permite comparar la experiencia de quienes utilizan un servicio
+              con la de quienes trabajan para hacerlo posible.
+            </p>
           </div>
+          <div className="grid gap-3">
+            <button
+              type="button"
+              onClick={() => chooseRole('usuario')}
+              className="rounded-xl border border-slate-200 p-4 text-left text-sm hover:border-emerald-500 hover:bg-emerald-50"
+            >
+              <span className="font-semibold">Usuario de un servicio</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => chooseRole('trabajador')}
+              className="rounded-xl border border-slate-200 p-4 text-left text-sm hover:border-emerald-500 hover:bg-emerald-50"
+            >
+              <span className="font-semibold">Trabajador de una organización</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {(step === 'user' || step === 'worker') && (
+        <div className="flex-1 space-y-6 overflow-y-auto p-6 sm:p-8">
+          {isWorker ? (
+            <>
+              <div className="space-y-3 text-sm leading-relaxed">
+                <h4 className="text-lg font-semibold">Experiencia del Trabajador</h4>
+                <p>Queremos comprender cómo viviste este proceso de trabajo.</p>
+                <p>No buscamos evaluar tu desempeño.</p>
+                <p>No buscamos fiscalizar tu trabajo.</p>
+                <p>
+                  Queremos comprender las condiciones en las que desarrollas tu labor y cómo éstas
+                  influyen en la experiencia de quienes forman parte de la gestión.
+                </p>
+                <p>Tu experiencia es fundamental para comprender aquello que normalmente permanece invisible.</p>
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-semibold">
+                  ¿En qué organización ocurrió esta experiencia? *
+                </label>
+                <input
+                  value={placeOrOrganization}
+                  onChange={(event) => setPlaceOrOrganization(event.target.value)}
+                  placeholder="Nombre de la organización..."
+                  className="field"
+                />
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-semibold">¿Cómo viviste este proceso de trabajo? *</label>
+                <textarea
+                  value={story}
+                  onChange={(event) => setStory(event.target.value)}
+                  placeholder="Describe tu experiencia..."
+                  className="field min-h-32"
+                />
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="space-y-3 text-sm leading-relaxed">
+                <h4 className="text-lg font-semibold">Experiencia del Usuario</h4>
+                <p>Queremos comprender cómo viviste esta experiencia.</p>
+                <p>No estamos evaluando personas.</p>
+                <p>No estamos evaluando instituciones.</p>
+                <p>Queremos comprender cómo se vive la gestión desde la experiencia de quienes utilizan los servicios.</p>
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-semibold">
+                  ¿Dónde ocurrió esta experiencia? *
+                </label>
+                <input
+                  value={placeOrOrganization}
+                  onChange={(event) => setPlaceOrOrganization(event.target.value)}
+                  placeholder="Ingresa el nombre del lugar..."
+                  className="field"
+                />
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-semibold">¿Cómo viviste este trámite o proceso? *</label>
+                <textarea
+                  value={story}
+                  onChange={(event) => setStory(event.target.value)}
+                  placeholder="Describe tu experiencia..."
+                  className="field min-h-32"
+                />
+              </div>
+            </>
+          )}
+
+          {renderScale()}
+
           <div>
-            <label className="mb-3 block text-sm font-semibold">¿En qué rango de edad te encuentras? *</label>
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-              {AGE_RANGES.map((range) => (
-                <button key={range} type="button" onClick={() => setAgeRange(range)} className={`rounded-lg border px-3 py-3 text-sm ${ageRange === range ? 'border-emerald-600 bg-emerald-50 text-emerald-800' : 'border-slate-200 hover:border-slate-400'}`}>{range}</button>
+            <label className="mb-2 block text-sm font-semibold">
+              {isWorker
+                ? '¿Qué fue lo que más dificultó realizar correctamente este proceso? *'
+                : '¿Qué fue lo que más dificultó tu experiencia? *'}
+            </label>
+            <div className="space-y-2">
+              {difficultyOptions.map((item) => (
+                <label key={item} className="flex items-center gap-3 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={difficulties.includes(item)}
+                    onChange={() => toggleDifficulty(item)}
+                    className="h-4 w-4"
+                  />
+                  {item}
+                </label>
               ))}
             </div>
           </div>
-          <button disabled={!ageRange} onClick={() => setStep('story')} className="w-full rounded-full bg-slate-900 px-6 py-3 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-40">
-            Continuar
-          </button>
-        </div>
-      )}
 
-      {step === 'story' && (
-        <div className="flex-1 space-y-6 overflow-y-auto p-6 sm:p-8">
-          <div className="space-y-2">
-            <h4 className="text-lg font-semibold">Cuéntanos qué pasó</h4>
-            <p className="text-sm leading-relaxed text-slate-600">No necesitas responder como si fuera una encuesta. Cuéntanos, con tus propias palabras, qué gestión, trámite o proceso viviste y qué ocurrió.</p>
-          </div>
           <div>
-            <label className="mb-2 block text-sm font-semibold">Tu historia *</label>
-            <textarea autoFocus value={story} onChange={(e) => setStory(e.target.value)} placeholder="Cuéntanos la experiencia desde el principio. ¿Qué necesitabas hacer? ¿Qué ocurrió? ¿Cómo fue el recorrido?" className="field min-h-56" />
-          </div>
-          <button disabled={!story.trim()} onClick={() => setStep('context')} className="w-full rounded-full bg-slate-900 px-6 py-3 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-40">
-            Continuar
-          </button>
-        </div>
-      )}
-
-      {step === 'context' && (
-        <div className="flex-1 space-y-6 overflow-y-auto p-6 sm:p-8">
-          <div>
-            <h4 className="text-lg font-semibold">Ahora ayúdanos a comprender la historia</h4>
-            <p className="mt-1 text-sm text-slate-600">Estas preguntas no califican tu experiencia. Nos ayudan a interpretar lo que nos contaste.</p>
-          </div>
-          <div>
-            <label className="mb-2 block text-sm font-semibold">¿Cómo viviste esta experiencia? *</label>
-            <div className="grid gap-2 sm:grid-cols-2">
-              <button type="button" onClick={() => setRole('usuario')} className={`rounded-xl border p-3 text-left text-sm ${role === 'usuario' ? 'border-emerald-600 bg-emerald-50' : 'border-slate-200'}`}>Soy usuario de un servicio</button>
-              <button type="button" onClick={() => setRole('trabajador')} className={`rounded-xl border p-3 text-left text-sm ${role === 'trabajador' ? 'border-emerald-600 bg-emerald-50' : 'border-slate-200'}`}>Soy trabajador de una organización</button>
-            </div>
-          </div>
-          <div>
-            <label className="mb-2 block text-sm font-semibold">{isWorker ? '¿En qué organización ocurrió?' : '¿Dónde ocurrió?'}</label>
-            <input value={placeOrOrganization} onChange={(e) => setPlaceOrOrganization(e.target.value)} placeholder={isWorker ? 'Nombre de la organización...' : 'Nombre del lugar o servicio...'} className="field" />
-          </div>
-          <div>
-            <label className="mb-2 block text-sm font-semibold">Pensando en lo que nos contaste, ¿cuánta fricción sentiste? *</label>
-            <div className="flex gap-2">
-              {[1,2,3,4,5].map((value) => <button key={value} type="button" onClick={() => setFriction(String(value))} className={`h-11 w-11 rounded-lg border ${friction === String(value) ? 'border-emerald-600 bg-emerald-50' : 'border-slate-200'}`}>{value}</button>)}
-            </div>
-            <div className="mt-1 flex justify-between text-xs text-slate-500"><span>Sin fricción</span><span>Bloqueo / desgaste extremo</span></div>
-          </div>
-          <div>
-            <label className="mb-2 block text-sm font-semibold">¿Qué parte del recorrido hizo más difícil tu experiencia?</label>
-            <div className="space-y-2">
-              {difficultyOptions.map((item) => <label key={item} className="flex items-center gap-3 text-sm"><input type="checkbox" checked={difficulties.includes(item)} onChange={() => toggleDifficulty(item)} className="h-4 w-4" />{item}</label>)}
-            </div>
-          </div>
-          <div>
-            <label className="mb-2 block text-sm font-semibold">¿Cuándo sentiste la mayor incertidumbre o dificultad?</label>
+            <label className="mb-2 block text-sm font-semibold">
+              {isWorker
+                ? '¿En qué momento apareció la mayor dificultad? *'
+                : '¿En qué momento apareció la mayor incertidumbre? *'}
+            </label>
             <div className="grid gap-2">
-              {momentOptions.map((item) => <button key={item} type="button" onClick={() => setMoment(item)} className={`rounded-lg border px-3 py-2 text-left text-sm ${moment === item ? 'border-emerald-600 bg-emerald-50' : 'border-slate-200'}`}>{item}</button>)}
+              {momentOptions.map((item) => (
+                <button
+                  key={item}
+                  type="button"
+                  onClick={() => setMoment(item)}
+                  className={`rounded-lg border px-3 py-2 text-left text-sm ${
+                    moment === item
+                      ? 'border-emerald-600 bg-emerald-50'
+                      : 'border-slate-200 hover:border-slate-400'
+                  }`}
+                >
+                  {item}
+                </button>
+              ))}
             </div>
           </div>
+
           <div>
-            <label className="mb-2 block text-sm font-semibold">Si pudieras cambiar una sola cosa de lo que viviste, ¿qué cambiarías?</label>
-            <textarea value={change} onChange={(e) => setChange(e.target.value)} placeholder="Cuéntanos..." className="field min-h-28" />
+            <label className="mb-2 block text-sm font-semibold">
+              Si pudieras cambiar una sola cosa {isWorker ? 'del proceso' : 'de esta experiencia'}, ¿qué cambiarías? *
+            </label>
+            <textarea
+              value={change}
+              onChange={(event) => setChange(event.target.value)}
+              placeholder="Escribe tu propuesta..."
+              className="field min-h-28"
+            />
           </div>
-          {status === 'error' && <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700">No pudimos registrar tu historia. Inténtalo nuevamente.</p>}
-          <button type="button" disabled={status === 'sending' || !role || !friction || !moment || difficulties.length === 0} onClick={submit} className="w-full rounded-full bg-slate-900 px-6 py-3 text-sm font-medium text-white disabled:opacity-50">{status === 'sending' ? 'Guardando historia…' : 'Compartir mi historia'}</button>
+
+          {status === 'error' && (
+            <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700">
+              No pudimos registrar tu historia. Inténtalo nuevamente.
+            </p>
+          )}
+
+          <button
+            type="button"
+            disabled={
+              status === 'sending' ||
+              !placeOrOrganization.trim() ||
+              !story.trim() ||
+              !friction ||
+              difficulties.length === 0 ||
+              !moment ||
+              !change.trim()
+            }
+            onClick={submit}
+            className="w-full rounded-full bg-slate-900 px-6 py-3 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {status === 'sending' ? 'Registrando información…' : 'Enviar información'}
+          </button>
         </div>
       )}
 
@@ -177,14 +436,35 @@ export const EncuestaInvestigacion = ({ onClose }: { onClose: () => void }) => {
         <div className="flex flex-1 items-center justify-center p-8 text-center">
           <div className="max-w-md space-y-4">
             <div className="text-4xl">✓</div>
-            <p className="text-xl font-semibold">Gracias por contarnos tu historia.</p>
-            <p className="text-sm leading-relaxed text-slate-600">Tu experiencia pasa a formar parte de una investigación sobre la fricción organizacional y la forma en que los sistemas afectan el tiempo de las personas.</p>
-            <button onClick={onClose} className="rounded-full bg-slate-900 px-6 py-3 text-sm font-medium text-white">Cerrar</button>
+            <p className="text-xl font-semibold">Gracias por compartir tu experiencia.</p>
+            <p className="text-sm leading-relaxed text-slate-600">
+              Tu información contribuirá al estudio del Índice de Fricción Ciudadano (IFC) y a la
+              comprensión de cómo los sistemas afectan la experiencia y el tiempo de las personas.
+            </p>
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded-full bg-slate-900 px-6 py-3 text-sm font-medium text-white"
+            >
+              Cerrar
+            </button>
           </div>
         </div>
       )}
 
-      <style jsx>{`.field { width: 100%; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 0.75rem; outline: none; } .field:focus { border-color: #059669; box-shadow: 0 0 0 2px rgba(5,150,105,.1); }`}</style>
+      <style jsx>{`
+        .field {
+          width: 100%;
+          border: 1px solid #e2e8f0;
+          border-radius: 0.75rem;
+          padding: 0.75rem;
+          outline: none;
+        }
+        .field:focus {
+          border-color: #059669;
+          box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.1);
+        }
+      `}</style>
     </div>
   );
 };
