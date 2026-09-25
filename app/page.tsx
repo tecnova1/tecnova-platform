@@ -25,11 +25,8 @@ export default function Home() {
         </p>
 
         {/* COMPONENTE MODAL INTERNO */}
-        <div className="pt-3 sm:pt-4 flex flex-col sm:flex-row justify-center gap-3">
+        <div className="pt-3 sm:pt-4 flex justify-center">
           <ModalInvestigacion />
-          <a href="/nexo" className="inline-flex items-center justify-center rounded-full border border-emerald-700/70 bg-emerald-950/30 px-5 sm:px-7 py-3 sm:py-4 text-xs font-medium text-emerald-300 hover:bg-emerald-900/40 transition">
-            Entrar a Nexo Cívico →
-          </a>
         </div>
       </section>
 
