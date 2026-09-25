@@ -117,11 +117,10 @@ export const EncuestaInvestigacion = ({ onClose }: { onClose: () => void }) => {
         throw new Error('No fue posible registrar la historia.');
       }
 
+      setStatus('idle');
       setStep('sent');
     } catch {
       setStatus('error');
-    } finally {
-      setStatus('idle');
     }
   };
 
@@ -411,7 +410,7 @@ export const EncuestaInvestigacion = ({ onClose }: { onClose: () => void }) => {
 
           {status === 'error' && (
             <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700">
-              No pudimos registrar tu historia. Inténtalo nuevamente.
+              No pudimos registrar tu historia. El envío no fue confirmado. Revisa la conexión y vuelve a intentarlo.
             </p>
           )}
 
@@ -429,7 +428,7 @@ export const EncuestaInvestigacion = ({ onClose }: { onClose: () => void }) => {
             onClick={submit}
             className="w-full rounded-full bg-slate-900 px-6 py-3 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {status === 'sending' ? 'Registrando información…' : 'Enviar información'}
+            {status === 'sending' ? 'Guardando información…' : 'Enviar información'}
           </button>
         </div>
       )}
@@ -440,8 +439,7 @@ export const EncuestaInvestigacion = ({ onClose }: { onClose: () => void }) => {
             <div className="text-4xl">✓</div>
             <p className="text-xl font-semibold">Gracias por compartir tu experiencia.</p>
             <p className="text-sm leading-relaxed text-slate-600">
-              Tu información contribuirá al estudio del Índice de Fricción Ciudadano (IFC) y a la
-              comprensión de cómo los sistemas afectan la experiencia y el tiempo de las personas.
+              Tu información fue enviada correctamente y quedó registrada para la investigación de TECNOVA.
             </p>
             <button
               type="button"
