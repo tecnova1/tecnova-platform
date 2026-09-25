@@ -25,7 +25,6 @@ Nexo Cívico → Supabase (operación propia) → /api/tecnova/drive → GOOGLE_
 - case_id
 - received_at / submitted_at
 - role cuando corresponda
-- age_range cuando corresponda
 - territory cuando exista
 - story cuando exista
 - friction_1_5 cuando exista
