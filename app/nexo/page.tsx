@@ -6,11 +6,9 @@ export const metadata = {
 };
 
 export default function NexoGatewayPage() {
-  const url = process.env.NEXT_PUBLIC_NEXO_CIVICO_URL;
+  const url = process.env.NEXT_PUBLIC_NEXO_CIVICO_URL || "https://tecnova-civic-link.vercel.app";
 
-  if (url) {
-    redirect(url);
-  }
+  redirect(url);
 
   return (
     <main className="min-h-[70vh] flex items-center justify-center px-6 py-20">
