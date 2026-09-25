@@ -27,11 +27,11 @@ export default function NosotrosPage() {
       <div className="pt-8 border-t border-slate-800 space-y-6">
         <h2 className="text-xl font-light text-slate-200">Arquitectura de Módulos Futuros</h2>
         <div className="grid md:grid-cols-2 gap-6">
-          <div className="bg-slate-900/40 border border-slate-800 p-6 rounded-2xl space-y-2 opacity-75">
-            <span className="text-[10px] text-slate-500 border border-slate-800 px-2 py-0.5 rounded">En Desarrollo</span>
-            <h3 className="text-sm font-medium text-slate-200">Nexo Cívico</h3>
-            <p className="text-xs text-slate-400 font-light">Gestión territorial, reportes ciudadanos estructurados, geolocalización GPS y seguimiento comunitario.</p>
-          </div>
+          <a href="/nexo" className="group bg-slate-900/60 border border-emerald-900/60 p-6 rounded-2xl space-y-2 block transition hover:border-emerald-500/50">
+            <span className="text-[10px] text-emerald-400 border border-emerald-900/80 px-2 py-0.5 rounded">Método activo</span>
+            <h3 className="text-sm font-medium text-slate-200">Nexo Cívico <span className="text-emerald-400 transition group-hover:translate-x-1 inline-block">→</span></h3>
+            <p className="text-xs text-slate-400 font-light">Instrumento territorial de TECNOVA para observar, registrar y comprender antes de innovar.</p>
+          </a>
           <div className="bg-slate-900/40 border border-slate-800 p-6 rounded-2xl space-y-2 opacity-75">
             <span className="text-[10px] text-slate-500 border border-slate-800 px-2 py-0.5 rounded">En Desarrollo</span>
             <h3 className="text-sm font-medium text-slate-200">Replikarte</h3>
