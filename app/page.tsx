@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { ModalInvestigacion } from '@/components/ui/ModalInvestigacion';
 
 export default function Home() {
@@ -27,6 +28,17 @@ export default function Home() {
         {/* COMPONENTE MODAL INTERNO */}
         <div className="pt-3 sm:pt-4 flex justify-center">
           <ModalInvestigacion />
+        </div>
+
+        <div className="pt-2 flex justify-center">
+          <Link
+            href="/nexo"
+            className="group inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900/50 px-5 py-2.5 text-xs text-slate-300 transition hover:border-emerald-500/50 hover:text-white"
+          >
+            <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,.7)]" />
+            Entrar al método Nexo Cívico
+            <span className="transition group-hover:translate-x-1">→</span>
+          </Link>
         </div>
       </section>
 
